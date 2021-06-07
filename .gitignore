@@ -1,0 +1,17 @@
+#  Local .terraform directories
+**/.terraform/*
+**/.terraform.lock.hcl
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .tfvars files
+*.tfvars
+
+*.swp
+
+tf-packer
+tf-packer.pub
+TODO.md
+**/.DS_Store

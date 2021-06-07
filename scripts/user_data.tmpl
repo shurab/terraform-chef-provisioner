@@ -1,0 +1,47 @@
+#!/bin/bash -xev
+
+apt update
+apt upgrade -y
+
+# Do some chef pre-work
+/bin/mkdir -p /etc/chef
+/bin/mkdir -p /var/lib/chef
+/bin/mkdir -p /var/log/chef
+
+# Setup hosts file correctly
+cat >> "/etc/hosts" << EOF
+10.229.16.32 chef.devtools.propel.io
+EOF
+
+cd /etc/chef/
+
+cat >> "client-validator.pem" << EOF
+${validator_private_key}
+EOF
+
+chmod 600 client-validator.pem
+
+# Install chef
+curl -L https://omnitruck.chef.io/install.sh | bash || error_exit 'could not install chef'
+
+# Create first-boot.json
+cat > "/etc/chef/first-boot.json" << EOF
+{
+   "run_list" :[]
+}
+EOF
+
+NODE_NAME=${node_name}
+
+# Create client.rb
+cat > '/etc/chef/client.rb' << EOF
+log_location            STDOUT
+chef_server_url         "${chef_server_url}"
+validation_client_name  "${validator_name}"
+validation_key          "/etc/chef/client-validator.pem"
+node_name               "$NODE_NAME"
+chef_license            "accept"
+ssl_verify_mode          :verify_none
+EOF
+
+chef-client -E ${environment} -j /etc/chef/first-boot.json

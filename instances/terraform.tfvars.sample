@@ -1,0 +1,17 @@
+region = "us-east-1"
+
+chef_server_url = "https://chef.private_instance.io/organizations/your_team"
+
+node_name = "node_user_data"
+
+environment = "development"
+
+validator_name = "<YOUR VALIDATION CLIENT NAME>"
+
+validator_private_key = <<EOT
+-----BEGIN RSA PRIVATE KEY-----
+
+.............................
+
+-----END RSA PRIVATE KEY-----
+EOT
